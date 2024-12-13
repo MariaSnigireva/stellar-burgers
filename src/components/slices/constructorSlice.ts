@@ -38,7 +38,7 @@ export const createOrder = createAsyncThunk(
 );
 
 export const burgerConstructorSlice = createSlice({
-  name: 'burgerconstructor',
+  name: 'burgerConstructor',
   initialState,
   reducers: {
     addIngredient: {
@@ -105,11 +105,11 @@ export const burgerConstructorSlice = createSlice({
 });
 
 // Селекторы
-export const getConstructorItems = (state: { burgerconstructor: ConstructorState }) => state.burgerconstructor.constructorItems;
-export const selectLoading = (state: { burgerconstructor: ConstructorState }) => state.burgerconstructor.loading;
-export const selectOrderRequest = (state: { burgerconstructor: ConstructorState }) => state.burgerconstructor.orderRequest;
-export const selectOrderModalData = (state: { burgerconstructor: ConstructorState }) => state.burgerconstructor.orderModalData;
-export const getError = (state: { burgerconstructor: ConstructorState }) => state.burgerconstructor.errorState;
+export const getConstructorItems = (state: { burgerConstructor: ConstructorState }) => state.burgerConstructor.constructorItems;
+export const selectLoading = (state: { burgerConstructor: ConstructorState }) => state.burgerConstructor.loading;
+export const selectOrderRequest = (state: { burgerConstructor: ConstructorState }) => state.burgerConstructor.orderRequest;
+export const selectOrderModalData = (state: { burgerConstructor: ConstructorState }) => state.burgerConstructor.orderModalData;
+export const getError = (state: { burgerConstructor: ConstructorState }) => state.burgerConstructor.errorState;
 
 export const {
   addIngredient,

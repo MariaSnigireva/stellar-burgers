@@ -10,11 +10,11 @@ import { ResetPassword } from '../../pages/reset-password';
 import { Profile } from '../../pages/profile';
 import { ProfileOrders } from '../../pages/profile-orders';
 import { NotFound404 } from '../../pages/not-fount-404';
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { AppDispatch, useDispatch } from '../../services/store';
-import { getIngredients } from '..//slices/ingredientsSlice';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';//хук
+import { AppDispatch, useDispatch } from '../../services/store';//хук редукс
+import { getIngredients } from '..//slices/ingredientsSlice';//thunk
 import { ProtectedRoute } from '../protected-route';
-import { checkUserAuth } from '../slices/authSlice';
+import { checkUserAuth } from '../slices/authSlice';//thunk проверки
 import { getCookie } from '../../utils/cookie';
 import '../../index.css';
 import styles from './app.module.css';
@@ -24,14 +24,14 @@ const App = () => {
   const dispatch = useDispatch();
   const nav = useNavigate();
 
-  const onClose = () => {
+  const onClose = () => {//возвращает на предыдущую страницу
     nav(-1);
   };
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        await dispatch(checkUserAuth()).unwrap();
+        await dispatch(checkUserAuth()).unwrap();//проверка авторизации
         dispatch(getIngredients());
       } catch (error) {
         console.error('Error during user authentication check:', error);

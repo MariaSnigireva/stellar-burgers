@@ -40,7 +40,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       {constructorItems.ingredients.length > 0 ? (
         constructorItems.ingredients.map(
           (item: TConstructorIngredient, index: number) => (
-            <BurgerConstructorElement
+            <BurgerConstructorElement //господи почему
               ingredient={item}
               index={index}
               totalItems={constructorItems.ingredients.length}

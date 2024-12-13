@@ -27,8 +27,8 @@ export const BurgerIngredients: FC = () => {
     else if (inViewFilling) setCurrentTab('main');
   }, [inViewBuns, inViewFilling, inViewSauces]);
 
-  const onTabClick = (tab: TTabMode) => {
-    setCurrentTab(tab);
+  const onTabClick = (tab: string) => {
+    setCurrentTab(tab as TTabMode);
     switch (tab) {
       case 'bun':
         titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });

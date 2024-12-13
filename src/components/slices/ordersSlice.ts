@@ -52,40 +52,34 @@ export const orderSlice = createSlice({
     builder
       .addCase(getOrderByNumber.pending, (state) => {
         state.loading = true;
-        state.error = null; // Сбрасываем состояние ошибки
       })
       .addCase(getOrderByNumber.fulfilled, (state, action) => {
         state.order = action.payload.orders[0];
         state.loading = false;
       })
-      .addCase(getOrderByNumber.rejected, (state, action) => {
+      .addCase(getOrderByNumber.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message; // Устанавливаем ошибку
       })
       .addCase(createOrder.pending, (state) => {
         state.loading = true;
-        state.error = null; // Сбрасываем состояние ошибки
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
         state.order = action.payload.order;
-        console.log('createOrder action payload', action.payload.order);
+        console.log('createOrder action payload',action.payload.order);
       })
-      .addCase(createOrder.rejected, (state, action) => {
+      .addCase(createOrder.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message; // Устанавливаем ошибку
       })
       .addCase(getOrders.pending, (state) => {
         state.loading = true;
-        state.error = null; // Сбрасываем состояние ошибки
       })
       .addCase(getOrders.fulfilled, (state, action) => {
         state.orders = action.payload;
         state.loading = false;
       })
-      .addCase(getOrders.rejected, (state, action) => {
+      .addCase(getOrders.rejected, (state) => {
         state.loading = false;
-        state.error = action.error.message; // Устанавливаем ошибку
       });
   },
 });
