@@ -1,26 +1,32 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch as dispatchHook, useSelector as selectorHook } from 'react-redux';
-import ingredientsReducer from './slices/ingredientsSlice';
-import burgerConstructorReducer from './slices/constructorSlice';
-import feedReducer from './slices/mainSlice';
-import orderReducer from './slices/ordersSlice';
-import authReducer from './slices/authSlice';
+import { configureStore } from '@reduxjs/toolkit';
+
+import {
+  TypedUseSelectorHook,
+  useDispatch as dispatchHook,
+  useSelector as selectorHook
+} from 'react-redux';
+import { combineReducers } from '@reduxjs/toolkit';
+import { ingredientsReducer } from '../services/slices/ingredientsSlice';
+import { constructorReducer } from '../services/slices/constructorSlice';
+import { userOrderReducer } from '../services/slices/mainSlice';
+import { userReducer } from '../services/slices/authSlice';
+import { ordersReducer } from '../services/slices/ordersSlice';
 
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
-  burgerConstructor: burgerConstructorReducer,
-  feed: feedReducer,
-  order: orderReducer,
-  auth: authReducer
-});
+  burgerConstructor: constructorReducer,
+  userOrder: userOrderReducer,
+  user: userReducer,
+  orders: ordersReducer
+}); // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
   devTools: process.env.NODE_ENV !== 'production'
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
+
 export type AppDispatch = typeof store.dispatch;
 
 export const useDispatch: () => AppDispatch = () => dispatchHook();

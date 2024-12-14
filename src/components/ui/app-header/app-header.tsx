@@ -9,32 +9,36 @@ import {
 } from '@zlden/react-developer-burger-ui-components';
 import { NavLink } from 'react-router-dom';
 
+type TNavLinkRenderProps = {
+  isActive: boolean;
+};
+
+function toggleLinkStyle({ isActive }: TNavLinkRenderProps) {
+  return isActive ? styles.link : styles.link_active;
+}
+
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
   <header className={styles.header}>
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
-        <>
+        <NavLink className={toggleLinkStyle} to='/'>
           <BurgerIcon type={'primary'} />
-          <NavLink className='text text_type_main-default ml-2 mr-10' to={'/'}>
-            Конструктор
-          </NavLink>
-        </>
-        <>
+          <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
+        </NavLink>
+        <NavLink className={toggleLinkStyle} to='/feed'>
           <ListIcon type={'primary'} />
-          <NavLink className='text text_type_main-default ml-2' to={'/feed'}>
-            Лента заказов
-          </NavLink>
-        </>
+          <p className='text text_type_main-default ml-2'>Лента заказов</p>
+        </NavLink>
       </div>
-      <NavLink to={'/'}>
       <div className={styles.logo}>
         <Logo className='' />
       </div>
-      </NavLink>
       <div className={styles.link_position_last}>
-        <ProfileIcon type={'primary'} />
-        <NavLink className='text text_type_main-default ml-2' to={'/profile'}>
-          {userName || 'Личный кабинет'}
+        <NavLink className={toggleLinkStyle} to='/profile'>
+          <ProfileIcon type={'primary'} />
+          <p className='text text_type_main-default ml-2'>
+            {userName || 'Личный кабинет'}
+          </p>
         </NavLink>
       </div>
     </nav>

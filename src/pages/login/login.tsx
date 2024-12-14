@@ -1,39 +1,29 @@
-import { FC, FormEvent, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
-import { getIsAuth, loginUser } from '../../components/slices/authSlice';
-import { TLoginData } from '../../utils/burger-api';
 import { useDispatch, useSelector } from '../../services/store';
-import { getCookie, setCookie } from '../../utils/cookie';
-import { useNavigate } from 'react-router-dom';
+import {
+  authUserRight,
+  loginUser
+} from '../../services/slices/authSlice';
+import { Navigate } from 'react-router-dom';
 
 export const Login: FC = () => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
-  const nav = useNavigate();
-  const isAuth = useSelector(getIsAuth);
-  const handleSubmit = (e: SyntheticEvent<Element, Event>) => {
-    const formEvent = e as FormEvent<HTMLFormElement>;
-    formEvent.preventDefault();
-    const userLoginData: TLoginData = {
-      email,
-      password
-    };
+  const isAuthenticated = useSelector(authUserRight);
 
-    dispatch(loginUser({
-      email,
-      password
-    }))
-    const accessToken = getCookie('accessToken');
-if (accessToken) {
-  console.log('Успешно:', accessToken);
-} else {
-  console.log('Ошибка');
-}
-
-    console.log('userLoginData', userLoginData);
-    console.log('handleSubmitLogin');
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      return;
+    }
+    dispatch(loginUser({ email, password }));
   };
+
+  if (isAuthenticated) {
+    return <Navigate to={'/'} />;
+  }
 
   return (
     <LoginUI

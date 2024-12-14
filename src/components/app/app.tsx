@@ -1,68 +1,113 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { ConstructorPage } from '../../pages/constructor-page';
-import { Feed } from '../../pages/feed';
-import { Login } from '../../pages/login';
-import { Register } from '../../pages/register';
-import { ForgotPassword } from '../../pages/forgot-password';
-import { ResetPassword } from '../../pages/reset-password';
-import { Profile } from '../../pages/profile';
-import { ProfileOrders } from '../../pages/profile-orders';
-import { NotFound404 } from '../../pages/not-fount-404';
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';//хук
-import { AppDispatch, useDispatch } from '../../services/store';//хук редукс
-import { getIngredients } from '..//slices/ingredientsSlice';//thunk
-import { ProtectedRoute } from '../protected-route';
-import { checkUserAuth } from '../slices/authSlice';//thunk проверки
-import { getCookie } from '../../utils/cookie';
+import {
+  ConstructorPage,
+  Feed,
+  ForgotPassword,
+  Login,
+  NotFound404,
+  Profile,
+  ProfileOrders,
+  Register,
+  ResetPassword
+} from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { ProtectedRoute } from '../protected-route';
+import { useDispatch } from '../../services/store';
+
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
+import { useEffect } from 'react';
+import { getIngredients } from '../../services/slices/ingredientsSlice';
+
+import { getUser } from '../../services/slices/authSlice';
 const App = () => {
   const location = useLocation();
-  const background = location.state?.background;
+  const backgroundLocation = location.state?.background;
   const dispatch = useDispatch();
-  const nav = useNavigate();
-
-  const onClose = () => {//возвращает на предыдущую страницу
-    nav(-1);
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        await dispatch(checkUserAuth()).unwrap();//проверка авторизации
-        dispatch(getIngredients());
-      } catch (error) {
-        console.error('Error during user authentication check:', error);
-      }
-    };
-    initializeApp();
+    dispatch(getIngredients());
+    dispatch(getUser());
   }, [dispatch]);
+
+  const onClose = () => {
+    navigate(-1); // Возвращаемся на предыдущую страницу
+  };
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={background || location}>
+      <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
-        <Route path='/feed' element={<Feed />} />
-        <Route path='/login' element={<ProtectedRoute forNotAuth={true}><Login /></ProtectedRoute>} />
-        <Route path='/register' element={<ProtectedRoute forNotAuth={true}><Register /></ProtectedRoute>} />
-        <Route path='/forgot-password' element={<ProtectedRoute forNotAuth={true}><ForgotPassword /></ProtectedRoute>} />
-        <Route path='/reset-password' element={<ProtectedRoute><ResetPassword /></ProtectedRoute>} />
-        <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path='/profile/orders' element={<ProtectedRoute><ProfileOrders /></ProtectedRoute>} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/feed' element={<Feed />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
-        <Route path='/profile/orders/:number' element={<OrderInfo />} />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <OrderInfo />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/login'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Login />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ForgotPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders'
+          element={
+            <ProtectedRoute>
+              <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
-      {background && (
+
+      {backgroundLocation && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Информация заказа' onClose={onClose}>
+              <Modal title={''} onClose={onClose}>
                 <OrderInfo />
               </Modal>
             }
@@ -78,7 +123,7 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Информация о заказе' onClose={onClose}>
+              <Modal title={''} onClose={onClose}>
                 <OrderInfo />
               </Modal>
             }
