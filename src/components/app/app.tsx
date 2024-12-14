@@ -29,7 +29,7 @@ const App = () => {
   useEffect(() => {
     dispatch(getIngredients());
     dispatch(getUser());
-  }, [dispatch]);
+  }, [dispatch]);//можно ли оставить пустой [] ...
 
   const onClose = () => {
     navigate(-1); // Возвращаемся на предыдущую страницу
