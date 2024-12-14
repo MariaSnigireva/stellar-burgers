@@ -1,16 +1,15 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from '../../services/store';
+import { userSelector, updateUser } from '../../services/slices/authSlice';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const user = useSelector(userSelector);
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name || '',
+    email: user?.email || '',
     password: ''
   });
 
@@ -29,13 +28,14 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(updateUser(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
   };
@@ -49,13 +49,13 @@ export const Profile: FC = () => {
 
   return (
     <ProfileUI
-      formValue={formValue}
-      isFormChanged={isFormChanged}
-      handleCancel={handleCancel}
-      handleSubmit={handleSubmit}
-      handleInputChange={handleInputChange}
+    formValue={formValue} // Передаем значения формы в компонент
+    isFormChanged={isFormChanged} // Передаем флаг изменения формы
+    handleCancel={handleCancel} // Передаем обработчик отмены изменений
+    handleSubmit={handleSubmit} // Передаем обработчик отправки формы
+    handleInputChange={handleInputChange} // Передаем обработчик изменения ввода
     />
   );
 
-  return null;
+   //Нужен ли этот ретерн...или выше уже возвращается - вроде не нужен
 };
