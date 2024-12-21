@@ -9,7 +9,7 @@ type TIngredientsState = {
   error: string | undefined;
 };
 
-const initialState: TIngredientsState = {
+export const initialState: TIngredientsState = {
   ingredient: null,
   ingredients: [],
   isLoading: false,

@@ -17,6 +17,9 @@ type TUserState = {
   data: TUser | null;
   loginUserError: string | null | unknown;
   loginUserRequest: boolean;
+  isLoading: boolean;
+  error: string | undefined;
+  user: TUser | null;
 };
 
 export const loginUser = createAsyncThunk(
@@ -60,13 +63,24 @@ export const logoutUser = createAsyncThunk('user/logout', async () => {
     });
 });
 
-const initialState: TUserState = {
+ export const initialState: TUserState = {
   isAuthChecked: false, 
   isAuthenticated: false,
   data: null,
   loginUserError: null,
-  loginUserRequest: false
+  loginUserRequest: false,
+  isLoading: false,
+  error: '',
+  user: null
 };
+
+export const fetchUser = createAsyncThunk<TUser, void>(
+  'user/fetchUser',
+  async () => {
+    const response = await getUserApi();
+    return response.user;
+  }
+);
 
 export const userSlice = createSlice({
   name: 'user',
