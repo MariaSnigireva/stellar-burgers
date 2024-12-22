@@ -66,13 +66,13 @@ describe('tests for userSlice', () => {
   it('handle loginUser.fulfilled', () => {
     const nextState = userReducer(
       initialState,
-      loginUser.fulfilled(mockResponse, '', {
+      loginUser.fulfilled(mockResponse.user, '', {
         email: '',
         password: ''
       })
     );
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.user).toEqual(mockResponse.user);
+    expect(nextState.user).toEqual(mockResponse.user); // Здесь используем только user
     expect(nextState.isAuthChecked).toBe(true);
   });
 

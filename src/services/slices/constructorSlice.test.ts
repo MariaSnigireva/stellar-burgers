@@ -1,5 +1,5 @@
 import { constructorReducer, initialState, addIngredient, deleteIngredient, moveUp, moveDown, clearBurgerConstructor } from './constructorSlice';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TConstructorIngredient } from '@utils-types';
 
 // Моковые данные для тестов
 const mockBun: TConstructorIngredient = {
@@ -14,7 +14,7 @@ const mockBun: TConstructorIngredient = {
   image: "https://code.s3.yandex.net/react/code/bun-02.png",
   image_mobile: "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
   image_large: "https://code.s3.yandex.net/react/code/bun-02-large.png",
-  id: 'bun-1' // Добавляем поле id для соответствия типу
+  id: 'bun-1'
 };
 
 const mockMainIngredient: TConstructorIngredient = {
@@ -29,7 +29,7 @@ const mockMainIngredient: TConstructorIngredient = {
   image: "https://code.s3.yandex.net/react/code/meat-01.png",
   image_mobile: "https://code.s3.yandex.net/react/code/meat-01-mobile.png",
   image_large: "https://code.s3.yandex.net/react/code/meat-01-large.png",
-  id: 'main-1' // Добавляем поле id для соответствия типу
+  id: 'main-1'
 };
 
 describe('constructorSlice', () => {
@@ -40,7 +40,20 @@ describe('constructorSlice', () => {
   it('should handle addIngredient for bun', () => {
     const action = addIngredient(mockBun);
     const newState = constructorReducer(initialState, action);
-    expect(newState.bun).toEqual(mockBun); // Проверяем, что булка добавлена
+    expect(newState.bun).toEqual(expect.objectContaining({
+      _id: mockBun._id,
+      name: mockBun.name,
+      type: mockBun.type,
+      proteins: mockBun.proteins,
+      fat: mockBun.fat,
+      carbohydrates: mockBun.carbohydrates,
+      calories: mockBun.calories,
+      price: mockBun.price,
+      image: mockBun.image,
+      image_mobile: mockBun.image_mobile,
+      image_large: mockBun.image_large,
+      // Не проверяем id, так как он может изменяться
+    })); 
     expect(newState.ingredients).toHaveLength(0); // Проверяем, что других ингредиентов нет
   });
 
@@ -48,37 +61,62 @@ describe('constructorSlice', () => {
     const action = addIngredient(mockMainIngredient);
     const newState = constructorReducer(initialState, action);
     expect(newState.ingredients).toHaveLength(1); // Проверяем, что ингредиент добавлен
-    expect(newState.ingredients[0]).toEqual(expect.objectContaining(mockMainIngredient)); // Проверяем, что добавленный ингредиент соответствует моковым данным
+    expect(newState.ingredients[0]).toEqual(expect.objectContaining({
+      _id: mockMainIngredient._id,
+      name: mockMainIngredient.name,
+      type: mockMainIngredient.type,
+      proteins: mockMainIngredient.proteins,
+      fat: mockMainIngredient.fat,
+      carbohydrates: mockMainIngredient.carbohydrates,
+      calories: mockMainIngredient.calories,
+      price: mockMainIngredient.price,
+      image: mockMainIngredient.image,
+      image_mobile: mockMainIngredient.image_mobile,
+      image_large: mockMainIngredient.image_large,
+      // Не проверяем id, так как он может изменяться
+    })); 
   });
 
   it('should handle deleteIngredient', () => {
-    initialState.ingredients = [mockMainIngredient]; // Устанавливаем состояние с ингредиентом
+    const stateWithIngredient = {
+      ...initialState,
+      ingredients: [mockMainIngredient],
+    };
     const deleteAction = deleteIngredient({ id: mockMainIngredient.id }); // Удаляем ингредиент по id
-    const newState = constructorReducer(initialState, deleteAction);
+    const newState = constructorReducer(stateWithIngredient, deleteAction);
     expect(newState.ingredients).toHaveLength(0); // Проверяем, что ингредиенты очищены
   });
 
   it('should handle moveUp', () => {
-    initialState.ingredients = [mockMainIngredient, mockBun]; // Устанавливаем состояние с ингредиентами
+    const stateWithIngredients = {
+      ...initialState,
+      ingredients: [mockMainIngredient, mockBun],
+    };
     const moveAction = moveUp(1); // Перемещаем "Краторная булка" вверх
-    const newState = constructorReducer(initialState, moveAction);
+    const newState = constructorReducer(stateWithIngredients, moveAction);
     expect(newState.ingredients[0]).toEqual(mockBun); // Проверяем порядок ингредиентов
     expect(newState.ingredients[1]).toEqual(mockMainIngredient);
   });
 
   it('should handle moveDown', () => {
-    initialState.ingredients = [mockBun, mockMainIngredient]; // Устанавливаем состояние с ингредиентами
+    const stateWithIngredients = {
+      ...initialState,
+      ingredients: [mockBun, mockMainIngredient],
+    };
     const moveAction = moveDown(0); // Перемещаем "Краторная булка" вниз
-    const newState = constructorReducer(initialState, moveAction);
+    const newState = constructorReducer(stateWithIngredients, moveAction);
     expect(newState.ingredients[0]).toEqual(mockMainIngredient); // Проверяем порядок ингредиентов
     expect(newState.ingredients[1]).toEqual(mockBun);
   });
 
   it('should handle clearBurgerConstructor', () => {
-    initialState.bun = mockBun; // Устанавливаем булку
-    initialState.ingredients = [mockMainIngredient]; // Устанавливаем ингредиенты
+    const stateWithIngredients = {
+      ...initialState,
+      bun: mockBun,
+      ingredients: [mockMainIngredient],
+    };
     const action = clearBurgerConstructor(); // Очищаем заказ
-    const newState = constructorReducer(initialState, action);
+    const newState = constructorReducer(stateWithIngredients, action);
     expect(newState.bun).toBeNull(); // Проверяем, что булка очищена
     expect(newState.ingredients).toHaveLength(0); // Проверяем, что ингредиенты очищены
   });

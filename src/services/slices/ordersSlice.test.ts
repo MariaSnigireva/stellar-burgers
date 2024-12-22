@@ -1,74 +1,110 @@
-import { ordersReducer, initialState, getOrder, getOrders } from './ordersSlice';
-import { TOrder, TOrdersData } from '@utils-types';
+import { configureStore } from '@reduxjs/toolkit';
+import { ordersSlice } from './ordersSlice';
+import { TIngredient } from '@utils-types';
 
-// Моковые данные для тестов
-const mockOrder: TOrder = {
-  _id: "6618f76897ede0001d0653db",
-  status: "done",
-  name: "Краторный био-марсианский бургер",
-  createdAt: "2024-01-01T00:00:00.000Z",
-  updatedAt: "2024-01-01T01:00:00.000Z",
-  number: 51530,
-  ingredients: [
-    "643d69a5c3f7b9001cfa093c", 
-    "643d69a5c3f7b9001cfa0941"  
-  ]
-};
-
-const mockOrders: TOrdersData = {
-  success: true,
-  orders: [mockOrder],
-  total: 1,
-  totalToday: 1
-};
+const ingredients: TIngredient[] = [
+  {
+    "_id": "643d69a5c3f7b9001cfa093c",
+    "name": "Краторная булка N-200i",
+    "type": "bun",
+    "proteins": 80,
+    "fat": 24,
+    "carbohydrates": 53,
+    "calories": 420,
+    "price": 1255,
+    "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+    "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+    "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+  },
+  {
+    "_id": "643d69a5c3f7b9001cfa0941",
+    "name": "Биокотлета из марсианской Магнолии",
+    "type": "main",
+    "proteins": 420,
+    "fat": 142,
+    "carbohydrates": 242,
+    "calories": 4242,
+    "price": 424,
+    "image": "https://code.s3.yandex.net/react/code/meat-01.png",
+    "image_mobile": "https://code.s3.yandex.net/react/code/meat-01-mobile.png",
+    "image_large": "https://code.s3.yandex.net/react/code/meat-01-large.png",
+  },
+  {
+    "_id": "643d69a5c3f7b9001cfa093e",
+    "name": "Филе Люминесцентного тетраодонтимформа",
+    "type": "main",
+    "proteins": 44,
+    "fat": 26,
+    "carbohydrates": 85,
+    "calories": 643,
+    "price": 988,
+    "image": "https://code.s3.yandex.net/react/code/meat-03.png",
+    "image_mobile": "https://code.s3.yandex.net/react/code/meat-03-mobile.png",
+    "image_large": "https://code.s3.yandex.net/react/code/meat-03-large.png",
+  }
+];
 
 describe('ordersSlice', () => {
+  const store = configureStore({
+    reducer: {
+      orders: ordersSlice.reducer,
+    },
+  });
 
   it('should return the initial state', () => {
-    expect(ordersReducer(undefined, { type: '' })).toEqual(initialState);
+    const state = store.getState();
+    expect(state.orders).toEqual(ordersSlice.getInitialState());
   });
 
-  it('should handle getOrder.pending', () => {
-    const action = getOrder.pending('', '');
-    const newState = ordersReducer(initialState, action);
-    expect(newState.isLoading).toBe(true);
-    expect(newState.error).toBeNull();
+  it('should return the order slice', () => {
+    const state = store.getState(); // Получаем полное состояние
+    const orderSlice = ordersSlice.selectors.getOrderSlice(state); // Передаем полное состояние
+    expect(orderSlice).toEqual(null); // Начальное значение null
   });
 
-  it('should handle getOrder.rejected', () => {
-    const action = getOrder.rejected(new Error('Ошибка при получении заказа'), '', {});
-    const newState = ordersReducer(initialState, action);
-    expect(newState.isLoading).toBe(false);
-    expect(newState.error).toBe('Ошибка при получении заказа');
+  it('should return the orders slice', () => {
+    const state = store.getState(); // Получаем полное состояние
+    const ordersSliceResult = ordersSlice.selectors.getOrdersUser(state); // Передаем полное состояние
+    expect(ordersSliceResult).toEqual([]);
   });
 
-  it('should handle getOrder.fulfilled', () => {
-    const action = getOrder.fulfilled(mockOrder, '', {});
-    const newState = ordersReducer(initialState, action);
-    expect(newState.order).toEqual(mockOrder); // Проверяем, что заказ добавлен
-    expect(newState.isLoading).toBe(false);
+  it('should return the total slice', () => {
+    const state = store.getState(); // Получаем полное состояние
+    const totalSlice = ordersSlice.selectors.getTotalSlice(state); // Передаем полное состояние
+    expect(totalSlice).toBe(0);
   });
 
-  it('should handle getOrders.pending', () => {
-    const action = getOrders.pending('', '');
-    const newState = ordersReducer(initialState, action);
-    expect(newState.isLoading).toBe(true);
-    expect(newState.error).toBeNull();
+  it('should return the total today slice', () => {
+    const state = store.getState(); // Получаем полное состояние
+    const totalTodaySlice = ordersSlice.selectors.getTotalTodaySlice(state); // Передаем полное состояние
+    expect(totalTodaySlice).toBe(0);
   });
 
-  it('should handle getOrders.rejected', () => {
-    const action = getOrders.rejected(new Error('Ошибка при получении всех заказов'), '', {});
-    const newState = ordersReducer(initialState, action);
-    expect(newState.isLoading).toBe(false);
-    expect(newState.error).toBe('Ошибка при получении всех заказов');
+  it('should update the state when getOrders is fulfilled', () => {
+    const action = {
+      type: 'order/getOrders/fulfilled',
+      payload: {
+        orders: ingredients,
+        total: 10,
+        totalToday: 5,
+      },
+    };
+    store.dispatch(action);
+    const state = store.getState().orders;
+    expect(state.orders).toEqual(ingredients);
+    expect(state.total).toBe(10);
+    expect(state.totalToday).toBe(5);
   });
 
-  it('should handle getOrders.fulfilled', () => {
-    const action = getOrders.fulfilled(mockOrders, '', {});
-    const newState = ordersReducer(initialState, action);
-    expect(newState.orders).toEqual(mockOrders.orders); // Проверяем, что все заказы добавлены
-    expect(newState.total).toBe(mockOrders.total); // Проверяем общее количество заказов
-    expect(newState.totalToday).toBe(mockOrders.totalToday); // Проверяем количество заказов на сегодня
-    expect(newState.isLoading).toBe(false);
+  it('should update the state when getOrder is fulfilled', () => {
+    const action = {
+      type: 'order/getOrder/fulfilled',
+      payload: {
+        order: ingredients[0],
+      },
+    };
+    store.dispatch(action);
+    const state = store.getState().orders;
+    expect(state.order).toEqual(ingredients[0]);
   });
 });

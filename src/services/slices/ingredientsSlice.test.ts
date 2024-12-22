@@ -45,21 +45,21 @@ describe('ingredientsSlice', () => {
   });
 
   it('should handle getIngredients.pending', () => {
-    const action = getIngredients.pending('', '');
+    const action = getIngredients.pending('');
     const newState = ingredientsReducer(initialState, action);
     expect(newState.isLoading).toBe(true);
     expect(newState.error).toBeUndefined();
   });
 
   it('should handle getIngredients.rejected', () => {
-    const action = getIngredients.rejected(new Error('Ошибка при получении ингредиентов'), '', {});
+    const action = getIngredients.rejected(new Error('Ошибка при получении ингредиентов'), '');
     const newState = ingredientsReducer(initialState, action);
     expect(newState.isLoading).toBe(false);
     expect(newState.error).toBe('Ошибка при получении ингредиентов');
   });
 
   it('should handle getIngredients.fulfilled', () => {
-    const action = getIngredients.fulfilled(mockIngredients, '', {});
+    const action = getIngredients.fulfilled(mockIngredients, '');
     const newState = ingredientsReducer(initialState, action);
     expect(newState.isLoading).toBe(false);
     expect(newState.ingredients).toEqual(mockIngredients); // Проверяем, что ингредиенты добавлены
