@@ -41,6 +41,10 @@ describe('Burger Constructor Integration Tests', () => {
         }
       }
     }).as('createOrder');
+    
+    cy.intercept('GET', 'api/auth/user', {
+      fixture: 'user.json'
+    });
 
     // Посещение страницы конструктора бургера
     cy.visit('http://localhost:4004'); 
