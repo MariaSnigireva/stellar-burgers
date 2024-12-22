@@ -37,12 +37,12 @@ describe('конструктор бургера', () => {
   it('Добавление ингредиентов', () => {
     cy.visit(testUrl);
     cy.wait('@getIngredients');
-    // Добавление булок
+    // добавление булок
     cy.get('[data-ing="ingredient-item-bun"]').contains('Добавить').click();
     cy.get('[data-cy="constructor-bun-1"]').should('exist');
     cy.get('[data-cy="constructor-bun-2"]').should('exist');
 
-    // Добавление других ингредиентов
+    // добавление других ингредиентов
     cy.get('[data-ing="ingredient-item-main"]')
       .contains('Добавить')
       .click({ force: true });
@@ -52,7 +52,7 @@ describe('конструктор бургера', () => {
     cy.get('[data-cy="constructor-topping"]').should('exist');
   });
 
-  it('Открытие и закрытие модального окна ингредиента', () => {
+  it('Открытие и закрытие модального', () => {
     cy.visit(testUrl);
     cy.wait('@getIngredients');
 
@@ -65,7 +65,7 @@ describe('конструктор бургера', () => {
     cy.get(modalBurger).should('not.exist');
   });
 
-  it('Открытие и закрытие модального окна ингредиента по клику на оверлей', () => {
+  it('Открытие и закрытие модального по клику на оверлей', () => {
     cy.visit(testUrl);
     cy.wait('@getIngredients');
 
@@ -73,7 +73,7 @@ describe('конструктор бургера', () => {
     cy.get('[data-cy="ingredient-item-2"]').click();
     cy.get(modalBurger).should('be.visible');
 
-    // Закрытие по клику на оверлей
+    // закрытие по оверлей
     cy.get('[data-cy="modal-overlay"]').click('topRight', { force: true });
     cy.get(modalBurger).should('not.exist');
   });
@@ -85,17 +85,17 @@ describe('конструктор бургера', () => {
     cy.get('[data-ing="ingredient-item-main"]').contains('Добавить').click();
     cy.get('[data-ing="ingredient-item-sauce"]').contains('Добавить').click();
 
-    //Вызывается клик по кнопке «Оформить заказ».
+    //вызывается клик 
     cy.get('[data-cy=order-summ] button').click();
 
-    //Проверяется, что модальное окно открылось и номер заказа верный.
+    //проверка открытия
     cy.get(modalBurger).contains('11111').should('exist');
 
-    //Закрывается модальное окно и проверяется успешность закрытия.
+    //закрывается модальное окно 
     cy.get('[data-cy="modal-close-btn"]').click();
     cy.get(modalBurger).should('not.exist');
 
-    //Проверяется, что конструктор пуст.
+    // конструктор пуст.
     cy.get('[data-cy=constructor]')
       .contains('Ингредиент 1')
       .should('not.exist');
