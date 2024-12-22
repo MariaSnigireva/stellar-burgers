@@ -5,10 +5,10 @@
     "_id": "6691143b119d45001b4f84fa",
     "number": 11111,
     "owner": {
-      "name": "Гульназ",
-      "email": "ggumi@yandex.com",
-      "createdAt": "2024-07-12T11:32:11.625Z",
-      "updatedAt": "2024-07-12T11:32:12.016Z"
+      "name": "Mary",
+      "email": "Masch.dark@yandex.ru",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:01.000Z"
     },
     "ingredients": [
       {
@@ -55,8 +55,8 @@
       }
     ],
     "status": "done",
-    "createdAt": "2024-07-12T11:32:11.625Z",
-    "updatedAt": "2024-07-12T11:32:12.016Z",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:01.000Z",
     "price": 1976
   }
 }
