@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.23% </span>
+                <span class="strong">88.09% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>75/85</span>
+                <span class='fraction'>74/84</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.23% </span>
+                <span class="strong">88.09% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>75/85</span>
+                <span class='fraction'>74/84</span>
             </div>
         
             
@@ -147,8 +147,7 @@
 <a name='L82'></a><a href='#L82'>82</a>
 <a name='L83'></a><a href='#L83'>83</a>
 <a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a>
-<a name='L86'></a><a href='#L86'>86</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -201,7 +200,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -235,7 +233,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getFeedsApi, getOrderByNumberApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TOrder,RequestStatus  } from '@utils-types';
+import { TOrder, RequestStatus } from '@utils-types';
 &nbsp;
 type TOrdersState = {
   order: TOrder | null; // Изменено на TOrder | null
@@ -277,38 +275,37 @@ export const ordersSlice = createSlice({
   },
   extraReducers: (builder) =&gt; {
     builder
-        .addCase(getOrder.pending, (state) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.error = null;</span>
-<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Loading; // Устанавливаем статус Loading</span>
-        })
-        .addCase(getOrder.rejected, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.error = action.error.message;</span>
-<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Failed; // Устанавливаем статус Failed</span>
-        })
-        .addCase(getOrder.fulfilled, (state, action) =&gt; {
-          // Проверяем, что action.payload является правильной структурой
-          if (action.payload.orders &amp;&amp; action.payload.orders.length &gt; 0) {
-              state.order = action.payload.orders[0]; // Устанавливаем первый заказ из массива
-          }<span class="branch-0 cbranch-no" title="branch not covered" > else {</span>
-<span class="cstat-no" title="statement not covered" >              state.order = null; // Если заказ не найден, устанавливаем null</span>
-<span class="cstat-no" title="statement not covered" >          }</span>
-          state.requestStatus = RequestStatus.Success; // Устанавливаем статус Success
+      .addCase(getOrder.pending, (state) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
+<span class="cstat-no" title="statement not covered" >        state.requestStatus = RequestStatus.Loading;</span>
       })
-        .addCase(getOrders.pending, (state) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.error = null;</span>
-<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Loading; // Устанавливаем статус Loading</span>
-        })
-        .addCase(getOrders.rejected, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.error = action.payload;</span>
-<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Failed; // Устанавливаем статус Failed</span>
-        })
-        .addCase(getOrders.fulfilled, (state, action) =&gt; {
-            state.orders = action.payload.orders;
-            state.total = action.payload.total;
-            state.totalToday = action.payload.totalToday;
-            state.requestStatus = RequestStatus.Success; // Устанавливаем статус Success
-        });
-}
+      .addCase(getOrder.rejected, (state, action) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.error = action.error.message;</span>
+<span class="cstat-no" title="statement not covered" >        state.requestStatus = RequestStatus.Failed;</span>
+      })
+      .addCase(getOrder.fulfilled, (state, action) =&gt; {
+        if (action.payload.orders &amp;&amp; action.payload.orders.length &gt; 0) {
+          state.order = action.payload.orders[0];
+        }<span class="branch-0 cbranch-no" title="branch not covered" > else {</span>
+<span class="cstat-no" title="statement not covered" >          state.order = null;</span>
+<span class="cstat-no" title="statement not covered" >        }</span>
+        state.requestStatus = RequestStatus.Success;
+      })
+      .addCase(getOrders.pending, (state) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
+<span class="cstat-no" title="statement not covered" >        state.requestStatus = RequestStatus.Loading;</span>
+      })
+      .addCase(getOrders.rejected, (state, action) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.error = action.payload;</span>
+<span class="cstat-no" title="statement not covered" >        state.requestStatus = RequestStatus.Failed;</span>
+      })
+      .addCase(getOrders.fulfilled, (state, action) =&gt; {
+        state.orders = action.payload.orders;
+        state.total = action.payload.total;
+        state.totalToday = action.payload.totalToday;
+        state.requestStatus = RequestStatus.Success;
+      });
+  }
 });
 &nbsp;
 export const {
@@ -325,7 +322,7 @@ export const ordersReducer = ordersSlice.reducer;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-23T19:05:06.451Z
+                at 2024-12-23T20:35:41.976Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

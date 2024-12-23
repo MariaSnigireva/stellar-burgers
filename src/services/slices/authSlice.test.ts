@@ -5,7 +5,7 @@ import {
   loginUser,
   registerUser,
   getUser,
-  logoutUser,
+  logoutUser
 } from './authSlice';
 import * as api from '@api';
 import { TUser } from '@utils-types';
@@ -13,14 +13,14 @@ import { TUser } from '@utils-types';
 // Моковые данные для тестов
 const mockUser: TUser = {
   email: 'Masch.dark@yandex.ru',
-  name: 'Mary',
+  name: 'Mary'
 };
 
 jest.mock('@api', () => ({
   loginUserApi: jest.fn(),
   registerUserApi: jest.fn(),
   getUserApi: jest.fn(),
-  logoutApi: jest.fn(),
+  logoutApi: jest.fn()
 }));
 
 type TRegisterData = {
@@ -43,10 +43,13 @@ describe('tests for userSlice', () => {
     const registerData: TRegisterData = {
       email: 'test@example.com',
       password: 'password123',
-      name: 'Test User',
+      name: 'Test User'
     };
 
-    const nextState = userReducer(initialState, registerUser.pending('', registerData));
+    const nextState = userReducer(
+      initialState,
+      registerUser.pending('', registerData)
+    );
     expect(nextState.isLoading).toBe(true);
     expect(nextState.error).toBe(null); // Ожидаем null
   });
@@ -55,13 +58,13 @@ describe('tests for userSlice', () => {
     (api.registerUserApi as jest.Mock).mockResolvedValueOnce({
       accessToken: 'token',
       refreshToken: 'refreshToken',
-      user: mockUser,
+      user: mockUser
     });
 
     const registerData: TRegisterData = {
       email: 'test@example.com',
       password: 'password123',
-      name: 'Test User',
+      name: 'Test User'
     };
 
     const nextState = await userReducer(
@@ -77,12 +80,14 @@ describe('tests for userSlice', () => {
 
   it('should handle registerUser.rejected', async () => {
     const errorMessage = 'Registration failed';
-    (api.registerUserApi as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+    (api.registerUserApi as jest.Mock).mockRejectedValueOnce(
+      new Error(errorMessage)
+    );
 
     const registerData: TRegisterData = {
       email: 'test@example.com',
       password: 'password123',
-      name: 'Test User',
+      name: 'Test User'
     };
 
     const nextState = await userReducer(
@@ -97,10 +102,13 @@ describe('tests for userSlice', () => {
   it('should handle loginUser.pending', () => {
     const loginData: TLoginData = {
       email: 'test@example.com',
-      password: 'password123',
+      password: 'password123'
     };
 
-    const nextState = userReducer(initialState, loginUser.pending('', loginData));
+    const nextState = userReducer(
+      initialState,
+      loginUser.pending('', loginData)
+    );
     expect(nextState.isLoading).toBe(true);
     expect(nextState.error).toBe(null); // Ожидаем null
   });
@@ -109,12 +117,12 @@ describe('tests for userSlice', () => {
     (api.loginUserApi as jest.Mock).mockResolvedValueOnce({
       accessToken: 'token',
       refreshToken: 'refreshToken',
-      user: mockUser,
+      user: mockUser
     });
 
     const loginData: TLoginData = {
       email: mockUser.email,
-      password: 'password123',
+      password: 'password123'
     };
 
     const nextState = await userReducer(
@@ -130,11 +138,13 @@ describe('tests for userSlice', () => {
 
   it('should handle loginUser.rejected', async () => {
     const errorMessage = 'Login failed';
-    (api.loginUserApi as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+    (api.loginUserApi as jest.Mock).mockRejectedValueOnce(
+      new Error(errorMessage)
+    );
 
     const loginData: TLoginData = {
       email: 'test@example.com',
-      password: 'password123',
+      password: 'password123'
     };
 
     const nextState = await userReducer(
@@ -168,7 +178,9 @@ describe('tests for userSlice', () => {
 
   it('should handle fetchUser.rejected', async () => {
     const errorMessage = 'Fetch user failed';
-    (api.getUserApi as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+    (api.getUserApi as jest.Mock).mockRejectedValueOnce(
+      new Error(errorMessage)
+    );
 
     const nextState = await userReducer(
       initialState,
@@ -180,7 +192,10 @@ describe('tests for userSlice', () => {
   });
 
   it('should handle logoutUser.pending', () => {
-    const nextState = userReducer(initialState, logoutUser.pending('', undefined));
+    const nextState = userReducer(
+      initialState,
+      logoutUser.pending('', undefined)
+    );
     expect(nextState.isLoading).toBe(true);
     expect(nextState.error).toBe(null); // Ожидаем null
   });
@@ -190,7 +205,7 @@ describe('tests for userSlice', () => {
       ...initialState,
       isLoading: true,
       user: mockUser,
-      error: 'Some error',
+      error: 'Some error'
     };
 
     const nextState = userReducer(
@@ -208,12 +223,12 @@ describe('tests for userSlice', () => {
     const errorMessage = 'Logout failed';
     const action = {
       type: logoutUser.rejected.type,
-      error: { message: errorMessage },
+      error: { message: errorMessage }
     };
 
     const modifiedState = {
       ...initialState,
-      isLoading: true,
+      isLoading: true
     };
 
     const nextState = userReducer(modifiedState, action);

@@ -98,14 +98,14 @@ describe('ordersSlice', () => {
 
   it('should update the state when getOrder is fulfilled', () => {
     const action = {
-        type: 'order/getOrder/fulfilled',
-        payload: {
-            success: true,
-            orders: [ingredients[0]] // Передаем массив заказов
-        }
+      type: 'order/getOrder/fulfilled',
+      payload: {
+        success: true,
+        orders: [ingredients[0]] // Передаем массив заказов
+      }
     };
     store.dispatch(action);
     const state = store.getState().orders;
     expect(state.order).toEqual(ingredients[0]); // Проверяем, что состояние обновилось
-});
+  });
 });

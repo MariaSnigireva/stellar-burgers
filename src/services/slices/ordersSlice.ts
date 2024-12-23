@@ -1,6 +1,6 @@
 import { getFeedsApi, getOrderByNumberApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TOrder,RequestStatus  } from '@utils-types';
+import { TOrder, RequestStatus } from '@utils-types';
 
 type TOrdersState = {
   order: TOrder | null; // Изменено на TOrder | null
@@ -42,38 +42,37 @@ export const ordersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-        .addCase(getOrder.pending, (state) => {
-            state.error = null;
-            state.requestStatus = RequestStatus.Loading; 
-        })
-        .addCase(getOrder.rejected, (state, action) => {
-            state.error = action.error.message;
-            state.requestStatus = RequestStatus.Failed; 
-        })
-        .addCase(getOrder.fulfilled, (state, action) => {
-          
-          if (action.payload.orders && action.payload.orders.length > 0) {
-              state.order = action.payload.orders[0]; 
-          } else {
-              state.order = null; 
-          }
-          state.requestStatus = RequestStatus.Success; 
+      .addCase(getOrder.pending, (state) => {
+        state.error = null;
+        state.requestStatus = RequestStatus.Loading;
       })
-        .addCase(getOrders.pending, (state) => {
-            state.error = null;
-            state.requestStatus = RequestStatus.Loading; 
-        })
-        .addCase(getOrders.rejected, (state, action) => {
-            state.error = action.payload;
-            state.requestStatus = RequestStatus.Failed; 
-        })
-        .addCase(getOrders.fulfilled, (state, action) => {
-            state.orders = action.payload.orders;
-            state.total = action.payload.total;
-            state.totalToday = action.payload.totalToday;
-            state.requestStatus = RequestStatus.Success; 
-        });
-}
+      .addCase(getOrder.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.requestStatus = RequestStatus.Failed;
+      })
+      .addCase(getOrder.fulfilled, (state, action) => {
+        if (action.payload.orders && action.payload.orders.length > 0) {
+          state.order = action.payload.orders[0];
+        } else {
+          state.order = null;
+        }
+        state.requestStatus = RequestStatus.Success;
+      })
+      .addCase(getOrders.pending, (state) => {
+        state.error = null;
+        state.requestStatus = RequestStatus.Loading;
+      })
+      .addCase(getOrders.rejected, (state, action) => {
+        state.error = action.payload;
+        state.requestStatus = RequestStatus.Failed;
+      })
+      .addCase(getOrders.fulfilled, (state, action) => {
+        state.orders = action.payload.orders;
+        state.total = action.payload.total;
+        state.totalToday = action.payload.totalToday;
+        state.requestStatus = RequestStatus.Success;
+      });
+  }
 });
 
 export const {

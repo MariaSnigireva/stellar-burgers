@@ -39,6 +39,7 @@ export const DefaultIngredient: Story = {
       image_mobile: ''
     },
     count: 2,
+    index: 0,
     locationState: {
       background: {
         hash: '',

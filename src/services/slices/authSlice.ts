@@ -15,7 +15,7 @@ type TUserState = {
   isAuthChecked: boolean;
   isAuthenticated: boolean;
   data: TUser | null;
-  loginUserError: string | null | undefined; 
+  loginUserError: string | null | undefined;
   loginUserRequest: boolean;
   isLoading: boolean;
   error: string | null;
@@ -28,7 +28,7 @@ export const loginUser = createAsyncThunk<TUser, TLoginData>(
     const userData = await loginUserApi(data);
     setCookie('accessToken', userData.accessToken);
     localStorage.setItem('refreshToken', userData.refreshToken);
-    return userData.user; 
+    return userData.user;
   }
 );
 
@@ -38,15 +38,15 @@ export const registerUser = createAsyncThunk<TUser, TRegisterData>(
     const userData = await registerUserApi(data);
     setCookie('accessToken', userData.accessToken);
     localStorage.setItem('refreshToken', userData.refreshToken);
-    return userData.user; 
+    return userData.user;
   }
 );
 
 export const getUser = createAsyncThunk<TUser, void>(
   'user/getUser',
   async () => {
-    const response = await getUserApi(); 
-    return response.user; 
+    const response = await getUserApi();
+    return response.user;
   }
 );
 export const updateUser = createAsyncThunk(
@@ -67,18 +67,18 @@ export const initialState: TUserState = {
   loginUserError: null,
   loginUserRequest: false,
   isLoading: false,
-  error: null, 
-  user: null,
+  error: null,
+  user: null
 };
 type TUserResponse = {
-  user: TUser; 
+  user: TUser;
 };
 
 export const fetchUser = createAsyncThunk<TUser, void>(
   'user/fetchUser',
   async () => {
     const response: TUserResponse = await getUserApi();
-    return response.user; 
+    return response.user;
   }
 );
 
@@ -93,77 +93,77 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-        .addCase(loginUser.pending, (state) => {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(loginUser.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message || "Login failed"; 
-        })
-        .addCase(loginUser.fulfilled, (state, action) => {
-            state.user = action.payload;
-            state.isLoading = false;
-            state.isAuthenticated = true;
-            state.isAuthChecked = true;
-        })
-        .addCase(registerUser.pending, (state) => {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(registerUser.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message || "Registration failed";
-        })
-        .addCase(registerUser.fulfilled, (state, action) => {
-            state.user = action.payload;
-            state.isLoading = false;
-            state.isAuthenticated = true;
-            state.isAuthChecked = true;
-        })
-        .addCase(getUser.pending, (state) => {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(getUser.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message || "Fetch user failed"; 
-        })
-        .addCase(getUser.fulfilled, (state, action) => {
-            state.user = action.payload;
-            state.isLoading = false;
-            state.isAuthenticated = true;
-            state.isAuthChecked = true;
-        })
-        .addCase(logoutUser.pending, (state) => {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(logoutUser.rejected, (state, action) => {
-            state.isLoading = false;
-            state.error = action.error.message || "Logout failed"; 
-        })
-        .addCase(logoutUser.fulfilled, (state) => {
-            state.user = null;
-            state.isLoading = false;
-            state.isAuthenticated = false;
-            state.isAuthChecked = true;
-        })
-        .addCase(fetchUser.pending, (state) => {
-          state.isLoading = true;
-          state.error = null; 
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Login failed';
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Registration failed';
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
+      })
+      .addCase(getUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Fetch user failed';
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Logout failed';
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.isAuthChecked = true;
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-          state.user = action.payload; 
-          state.isLoading = false;
-          state.isAuthenticated = true;
-          state.isAuthChecked = true;
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
       })
       .addCase(fetchUser.rejected, (state, action) => {
-          state.isLoading = false;
-          state.error = action.error.message || "Fetch user failed"; 
+        state.isLoading = false;
+        state.error = action.error.message || 'Fetch user failed';
       });
-}
+  }
 });
 
 export const userReducer = userSlice.reducer;

@@ -209,14 +209,12 @@ const config: Config = {
   },
   moduleNameMapper: {
     '^@api$': path.resolve(__dirname, 'src/utils/burger-api.ts'),
-    '^@utils-types$': path.resolve(__dirname, 'src/utils/types'),
-   
+    '^@utils-types$': path.resolve(__dirname, 'src/utils/types')
   },
- 
+
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src']
 };
-
 
 export default config;

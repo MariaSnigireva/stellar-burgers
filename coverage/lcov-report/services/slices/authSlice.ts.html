@@ -420,7 +420,7 @@ type TUserState = {
   isAuthChecked: boolean;
   isAuthenticated: boolean;
   data: TUser | null;
-  loginUserError: string | null | undefined; 
+  loginUserError: string | null | undefined;
   loginUserRequest: boolean;
   isLoading: boolean;
   error: string | null;
@@ -433,7 +433,7 @@ export const loginUser = createAsyncThunk&lt;TUser, TLoginData&gt;(
 <span class="cstat-no" title="statement not covered" >    const userData = await loginUserApi(data);</span>
 <span class="cstat-no" title="statement not covered" >    setCookie('accessToken', userData.accessToken);</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem('refreshToken', userData.refreshToken);</span>
-<span class="cstat-no" title="statement not covered" >    return userData.user; </span>
+<span class="cstat-no" title="statement not covered" >    return userData.user;</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 );
 &nbsp;
@@ -443,15 +443,15 @@ export const registerUser = createAsyncThunk&lt;TUser, TRegisterData&gt;(
 <span class="cstat-no" title="statement not covered" >    const userData = await registerUserApi(data);</span>
 <span class="cstat-no" title="statement not covered" >    setCookie('accessToken', userData.accessToken);</span>
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem('refreshToken', userData.refreshToken);</span>
-<span class="cstat-no" title="statement not covered" >    return userData.user; </span>
+<span class="cstat-no" title="statement not covered" >    return userData.user;</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 );
 &nbsp;
 export const getUser = createAsyncThunk&lt;TUser, void&gt;(
   'user/getUser',
   async () =&gt; {
-<span class="cstat-no" title="statement not covered" >    const response = await getUserApi(); </span>
-<span class="cstat-no" title="statement not covered" >    return response.user; </span>
+<span class="cstat-no" title="statement not covered" >    const response = await getUserApi();</span>
+<span class="cstat-no" title="statement not covered" >    return response.user;</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 );
 export const updateUser = createAsyncThunk(
@@ -472,18 +472,18 @@ export const initialState: TUserState = {
   loginUserError: null,
   loginUserRequest: false,
   isLoading: false,
-  error: null, 
-  user: null,
+  error: null,
+  user: null
 };
 type TUserResponse = {
-  user: TUser; 
+  user: TUser;
 };
 &nbsp;
 export const fetchUser = createAsyncThunk&lt;TUser, void&gt;(
   'user/fetchUser',
   async () =&gt; {
 <span class="cstat-no" title="statement not covered" >    const response: TUserResponse = await getUserApi();</span>
-<span class="cstat-no" title="statement not covered" >    return response.user; </span>
+<span class="cstat-no" title="statement not covered" >    return response.user;</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 );
 &nbsp;
@@ -498,77 +498,77 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) =&gt; {
     builder
-        .addCase(loginUser.pending, (state) =&gt; {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(loginUser.rejected, (state, action) =&gt; {
-            state.isLoading = false;
-            state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || "Login failed"; </span>
-        })
-        .addCase(loginUser.fulfilled, (state, action) =&gt; {
-            state.user = action.payload;
-            state.isLoading = false;
-            state.isAuthenticated = true;
-            state.isAuthChecked = true;
-        })
-        .addCase(registerUser.pending, (state) =&gt; {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(registerUser.rejected, (state, action) =&gt; {
-            state.isLoading = false;
-            state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || "Registration failed";</span>
-        })
-        .addCase(registerUser.fulfilled, (state, action) =&gt; {
-            state.user = action.payload;
-            state.isLoading = false;
-            state.isAuthenticated = true;
-            state.isAuthChecked = true;
-        })
-        .addCase(getUser.pending, (state) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.isLoading = true;</span>
-<span class="cstat-no" title="statement not covered" >            state.error = null; </span>
-        })
-        .addCase(getUser.rejected, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.isLoading = false;</span>
-<span class="cstat-no" title="statement not covered" >            state.error = action.error.message || "Fetch user failed"; </span>
-        })
-        .addCase(getUser.fulfilled, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >            state.user = action.payload;</span>
-<span class="cstat-no" title="statement not covered" >            state.isLoading = false;</span>
-<span class="cstat-no" title="statement not covered" >            state.isAuthenticated = true;</span>
-<span class="cstat-no" title="statement not covered" >            state.isAuthChecked = true;</span>
-        })
-        .addCase(logoutUser.pending, (state) =&gt; {
-            state.isLoading = true;
-            state.error = null; 
-        })
-        .addCase(logoutUser.rejected, (state, action) =&gt; {
-            state.isLoading = false;
-            state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || "Logout failed"; </span>
-        })
-        .addCase(logoutUser.fulfilled, (state) =&gt; {
-            state.user = null;
-            state.isLoading = false;
-            state.isAuthenticated = false;
-            state.isAuthChecked = true;
-        })
-        .addCase(fetchUser.pending, (state) =&gt; {
-          state.isLoading = true;
-          state.error = null; 
+      .addCase(loginUser.pending, (state) =&gt; {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) =&gt; {
+        state.isLoading = false;
+        state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || 'Login failed';</span>
+      })
+      .addCase(loginUser.fulfilled, (state, action) =&gt; {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
+      })
+      .addCase(registerUser.pending, (state) =&gt; {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) =&gt; {
+        state.isLoading = false;
+        state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || 'Registration failed';</span>
+      })
+      .addCase(registerUser.fulfilled, (state, action) =&gt; {
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
+      })
+      .addCase(getUser.pending, (state) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.isLoading = true;</span>
+<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
+      })
+      .addCase(getUser.rejected, (state, action) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.isLoading = false;</span>
+<span class="cstat-no" title="statement not covered" >        state.error = action.error.message || 'Fetch user failed';</span>
+      })
+      .addCase(getUser.fulfilled, (state, action) =&gt; {
+<span class="cstat-no" title="statement not covered" >        state.user = action.payload;</span>
+<span class="cstat-no" title="statement not covered" >        state.isLoading = false;</span>
+<span class="cstat-no" title="statement not covered" >        state.isAuthenticated = true;</span>
+<span class="cstat-no" title="statement not covered" >        state.isAuthChecked = true;</span>
+      })
+      .addCase(logoutUser.pending, (state) =&gt; {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) =&gt; {
+        state.isLoading = false;
+        state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || 'Logout failed';</span>
+      })
+      .addCase(logoutUser.fulfilled, (state) =&gt; {
+        state.user = null;
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.isAuthChecked = true;
+      })
+      .addCase(fetchUser.pending, (state) =&gt; {
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchUser.fulfilled, (state, action) =&gt; {
-          state.user = action.payload; 
-          state.isLoading = false;
-          state.isAuthenticated = true;
-          state.isAuthChecked = true;
+        state.user = action.payload;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
       })
       .addCase(fetchUser.rejected, (state, action) =&gt; {
-          state.isLoading = false;
-          state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || "Fetch user failed"; </span>
+        state.isLoading = false;
+        state.error = action.error.message<span class="branch-0 cbranch-no" title="branch not covered" > || 'Fetch user failed';</span>
       });
-}
+  }
 });
 &nbsp;
 export const userReducer = userSlice.reducer;
@@ -580,7 +580,7 @@ export const { userSelector, authCheck, authUserRight } = userSlice.selectors;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-23T19:05:06.451Z
+                at 2024-12-23T20:35:41.976Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
