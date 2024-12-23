@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { userOrderSlice } from './mainSlice';
 import { TOrder } from '@utils-types';
 
-// Определите здесь тип вашего состояния
 type TUserOrdersState = {
   order: TOrder | null;
   orders: TOrder[];
@@ -65,7 +64,7 @@ describe('userOrderSlice', () => {
   it('should update the state when sendUserOrder is rejected', () => {
     const action = {
       type: 'order/sendUserOrder/rejected',
-      error: { message: 'Ошибка' } // Ошибка должна быть объектом с полем message
+      error: { message: 'Ошибка' } 
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -99,7 +98,7 @@ describe('userOrderSlice', () => {
   it('should update the state when getUserOrders is rejected', () => {
     const action = {
       type: 'order/getUserOrders/rejected',
-      error: { message: 'Ошибка' } // Ошибка должна быть объектом с полем message
+      error: { message: 'Ошибка' } 
     };
     store.dispatch(action);
     const state = store.getState().userOrder;

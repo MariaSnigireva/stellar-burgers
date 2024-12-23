@@ -21,7 +21,7 @@ export const initialState: TOrdersState = {
   orders: [],
   total: 0,
   totalToday: 0,
-  requestStatus: RequestStatus.Idle, // Изначально статус Idle
+  requestStatus: RequestStatus.Idle, 
   error: null,
   orderRequest: false
 };
