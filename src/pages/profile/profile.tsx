@@ -49,13 +49,13 @@ export const Profile: FC = () => {
 
   return (
     <ProfileUI
-    formValue={formValue} // Передаем значения формы в компонент
-    isFormChanged={isFormChanged} // Передаем флаг изменения формы
-    handleCancel={handleCancel} // Передаем обработчик отмены изменений
-    handleSubmit={handleSubmit} // Передаем обработчик отправки формы
-    handleInputChange={handleInputChange} // Передаем обработчик изменения ввода
+      formValue={formValue} // Передаем значения формы в компонент
+      isFormChanged={isFormChanged} // Передаем флаг изменения формы
+      handleCancel={handleCancel} // Передаем обработчик отмены изменений
+      handleSubmit={handleSubmit} // Передаем обработчик отправки формы
+      handleInputChange={handleInputChange} // Передаем обработчик изменения ввода
     />
   );
 
-   //Нужен ли этот ретерн...или выше уже возвращается - вроде не нужен
+  //Нужен ли этот ретерн...или выше уже возвращается - вроде не нужен
 };

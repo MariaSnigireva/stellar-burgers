@@ -12,16 +12,17 @@ const rootReducer = combineReducers({
   [ordersSlice.name]: ordersSlice.reducer
 });
 
-const setupStore = () => configureStore({
-  reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production'
-});
+const setupStore = () =>
+  configureStore({
+    reducer: rootReducer,
+    devTools: process.env.NODE_ENV !== 'production'
+  });
 
 describe('Redux Store Configuration', () => {
   it('Правильная комбинация', () => {
     const store = setupStore();
     const state = store.getState();
-    
+
     expect(state).toHaveProperty(ingredientsSlice.name);
     expect(state).toHaveProperty(userSlice.name);
     expect(state).toHaveProperty(constructorSlice.name);
@@ -33,10 +34,16 @@ describe('Redux Store Configuration', () => {
     const store = setupStore();
     const state = store.getState();
 
-    expect(state[ingredientsSlice.name]).toEqual(ingredientsSlice.getInitialState());
+    expect(state[ingredientsSlice.name]).toEqual(
+      ingredientsSlice.getInitialState()
+    );
     expect(state[userSlice.name]).toEqual(userSlice.getInitialState());
-    expect(state[constructorSlice.name]).toEqual(constructorSlice.getInitialState());
-    expect(state[userOrderSlice.name]).toEqual(userOrderSlice.getInitialState());
+    expect(state[constructorSlice.name]).toEqual(
+      constructorSlice.getInitialState()
+    );
+    expect(state[userOrderSlice.name]).toEqual(
+      userOrderSlice.getInitialState()
+    );
     expect(state[ordersSlice.name]).toEqual(ordersSlice.getInitialState());
   });
 });

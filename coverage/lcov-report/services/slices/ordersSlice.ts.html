@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.47% </span>
+                <span class="strong">88.23% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>68/76</span>
+                <span class='fraction'>75/85</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.47% </span>
+                <span class="strong">88.23% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>68/76</span>
+                <span class='fraction'>75/85</span>
             </div>
         
             
@@ -139,7 +139,20 @@
 <a name='L74'></a><a href='#L74'>74</a>
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -190,6 +203,11 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -215,26 +233,30 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getFeedsApi, getOrderByNumberApi } from '../../utils/burger-api';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getFeedsApi, getOrderByNumberApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TOrder } from '@utils-types';
+import { TOrder,RequestStatus  } from '@utils-types';
 &nbsp;
 type TOrdersState = {
-  order: TOrder[]; // Массив с отдельным заказом
-  orders: TOrder[]; // Массив со всеми заказами
-  total: number; // Общее количество заказов
-  totalToday: number; // Общее количество заказов на сегодня
-  isLoading: boolean; // Флаг загрузки
-  error: string | null | unknown; // Ошибка, если она есть
-  orderRequest: boolean; // Флаг запроса заказа
+  order: TOrder | null; // Изменено на TOrder | null
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+  error: string | null | unknown;
+  orderRequest: boolean;
+  requestStatus: RequestStatus;
 };
 &nbsp;
+type TOrderResponse = {
+  success: boolean;
+  orders: TOrder[];
+};
 export const initialState: TOrdersState = {
-  order: [],
+  order: null,
   orders: [],
   total: 0,
   totalToday: 0,
-  isLoading: false,
+  requestStatus: RequestStatus.Idle, // Изначально статус Idle
   error: null,
   orderRequest: false
 };
@@ -255,33 +277,38 @@ export const ordersSlice = createSlice({
   },
   extraReducers: (builder) =&gt; {
     builder
-      .addCase(getOrder.pending, (state) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
-<span class="cstat-no" title="statement not covered" >        state.isLoading = true;</span>
+        .addCase(getOrder.pending, (state) =&gt; {
+<span class="cstat-no" title="statement not covered" >            state.error = null;</span>
+<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Loading; // Устанавливаем статус Loading</span>
+        })
+        .addCase(getOrder.rejected, (state, action) =&gt; {
+<span class="cstat-no" title="statement not covered" >            state.error = action.error.message;</span>
+<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Failed; // Устанавливаем статус Failed</span>
+        })
+        .addCase(getOrder.fulfilled, (state, action) =&gt; {
+          // Проверяем, что action.payload является правильной структурой
+          if (action.payload.orders &amp;&amp; action.payload.orders.length &gt; 0) {
+              state.order = action.payload.orders[0]; // Устанавливаем первый заказ из массива
+          }<span class="branch-0 cbranch-no" title="branch not covered" > else {</span>
+<span class="cstat-no" title="statement not covered" >              state.order = null; // Если заказ не найден, устанавливаем null</span>
+<span class="cstat-no" title="statement not covered" >          }</span>
+          state.requestStatus = RequestStatus.Success; // Устанавливаем статус Success
       })
-      .addCase(getOrder.rejected, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.error = action.error.message;</span>
-<span class="cstat-no" title="statement not covered" >        state.isLoading = false;</span>
-      })
-      .addCase(getOrder.fulfilled, (state, action) =&gt; {
-        state.order = action.payload.orders;
-        state.isLoading = false;
-      })
-      .addCase(getOrders.pending, (state) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.error = null;</span>
-<span class="cstat-no" title="statement not covered" >        state.isLoading = true;</span>
-      })
-      .addCase(getOrders.rejected, (state, action) =&gt; {
-<span class="cstat-no" title="statement not covered" >        state.error = action.payload;</span>
-<span class="cstat-no" title="statement not covered" >        state.isLoading = false;</span>
-      })
-      .addCase(getOrders.fulfilled, (state, action) =&gt; {
-        state.orders = action.payload.orders;
-        state.total = action.payload.total;
-        state.totalToday = action.payload.totalToday;
-        state.isLoading = false;
-      });
-  }
+        .addCase(getOrders.pending, (state) =&gt; {
+<span class="cstat-no" title="statement not covered" >            state.error = null;</span>
+<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Loading; // Устанавливаем статус Loading</span>
+        })
+        .addCase(getOrders.rejected, (state, action) =&gt; {
+<span class="cstat-no" title="statement not covered" >            state.error = action.payload;</span>
+<span class="cstat-no" title="statement not covered" >            state.requestStatus = RequestStatus.Failed; // Устанавливаем статус Failed</span>
+        })
+        .addCase(getOrders.fulfilled, (state, action) =&gt; {
+            state.orders = action.payload.orders;
+            state.total = action.payload.total;
+            state.totalToday = action.payload.totalToday;
+            state.requestStatus = RequestStatus.Success; // Устанавливаем статус Success
+        });
+}
 });
 &nbsp;
 export const {
@@ -298,7 +325,7 @@ export const ordersReducer = ordersSlice.reducer;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-21T21:45:15.850Z
+                at 2024-12-23T19:05:06.451Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

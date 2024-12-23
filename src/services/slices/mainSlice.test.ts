@@ -18,14 +18,14 @@ const order: TOrder = {
   createdAt: '2023-03-15T14:30:00.000Z',
   updatedAt: '2023-03-15T14:30:00.000Z',
   number: 12345,
-  ingredients: ['643d69a5c3f7b9001cfa093c', '643d69a5c3f7b9001cfa0941'],
+  ingredients: ['643d69a5c3f7b9001cfa093c', '643d69a5c3f7b9001cfa0941']
 };
 
 describe('userOrderSlice', () => {
   const store = configureStore({
     reducer: {
-      userOrder: userOrderSlice.reducer,
-    },
+      userOrder: userOrderSlice.reducer
+    }
   });
 
   it('should return the initial state', () => {
@@ -34,26 +34,26 @@ describe('userOrderSlice', () => {
   });
 
   it('should return the order selector', () => {
-    const state = store.getState(); 
-    const orderSelector = userOrderSlice.selectors.orderSelector(state); 
+    const state = store.getState();
+    const orderSelector = userOrderSlice.selectors.orderSelector(state);
     expect(orderSelector).toBeNull();
   });
 
   it('should return the orders selector', () => {
-    const state = store.getState(); 
-    const ordersSelector = userOrderSlice.selectors.ordersSelector(state); 
+    const state = store.getState();
+    const ordersSelector = userOrderSlice.selectors.ordersSelector(state);
     expect(ordersSelector).toEqual([]);
   });
 
   it('should return the order request selector', () => {
-    const state = store.getState(); 
-    const orderRequestSelector = userOrderSlice.selectors.orderRequest(state); 
+    const state = store.getState();
+    const orderRequestSelector = userOrderSlice.selectors.orderRequest(state);
     expect(orderRequestSelector).toBe(false);
   });
 
   it('should update the state when sendUserOrder is pending', () => {
     const action = {
-      type: 'order/sendUserOrder/pending',
+      type: 'order/sendUserOrder/pending'
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -65,7 +65,7 @@ describe('userOrderSlice', () => {
   it('should update the state when sendUserOrder is rejected', () => {
     const action = {
       type: 'order/sendUserOrder/rejected',
-      error: { message: 'Ошибка' }, // Ошибка должна быть объектом с полем message
+      error: { message: 'Ошибка' } // Ошибка должна быть объектом с полем message
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -77,7 +77,7 @@ describe('userOrderSlice', () => {
   it('should update the state when sendUserOrder is fulfilled', () => {
     const action = {
       type: 'order/sendUserOrder/fulfilled',
-      payload: { order },
+      payload: { order }
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -88,7 +88,7 @@ describe('userOrderSlice', () => {
 
   it('should update the state when getUserOrders is pending', () => {
     const action = {
-      type: 'order/getUserOrders/pending',
+      type: 'order/getUserOrders/pending'
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -99,7 +99,7 @@ describe('userOrderSlice', () => {
   it('should update the state when getUserOrders is rejected', () => {
     const action = {
       type: 'order/getUserOrders/rejected',
-      error: { message: 'Ошибка' }, // Ошибка должна быть объектом с полем message
+      error: { message: 'Ошибка' } // Ошибка должна быть объектом с полем message
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -110,7 +110,7 @@ describe('userOrderSlice', () => {
   it('should update the state when getUserOrders is fulfilled', () => {
     const action = {
       type: 'order/getUserOrders/fulfilled',
-      payload: [order],
+      payload: [order]
     };
     store.dispatch(action);
     const state = store.getState().userOrder;

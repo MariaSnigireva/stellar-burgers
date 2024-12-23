@@ -2,8 +2,10 @@
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
+import type { JestConfigWithTsJest } from 'ts-jest';
+import path from 'path';
 
-import type {Config} from 'jest';
+import type { Config } from 'jest';
 
 const config: Config = {
   // All imported modules in your tests should be mocked automatically
@@ -25,7 +27,7 @@ const config: Config = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -33,7 +35,7 @@ const config: Config = {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: "v8",
+  coverageProvider: 'v8',
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -202,9 +204,19 @@ const config: Config = {
       'ts-jest',
       {
         // настройки для ts-jest
-      },
-    ],
+      }
+    ]
   },
+  moduleNameMapper: {
+    '^@api$': path.resolve(__dirname, 'src/utils/burger-api.ts'),
+    '^@utils-types$': path.resolve(__dirname, 'src/utils/types'),
+   
+  },
+ 
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
 };
+
 
 export default config;

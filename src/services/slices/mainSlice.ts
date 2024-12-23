@@ -44,12 +44,12 @@ export const userOrderSlice = createSlice({
     builder
       .addCase(sendUserOrder.pending, (state) => {
         state.isLoading = true;
-        state.error = undefined;
+        state.error = null;
         state.orderRequest = true;
       })
       .addCase(sendUserOrder.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error?.message;
+        state.error = action.error?.message || null;
         state.orderRequest = false;
       })
       .addCase(sendUserOrder.fulfilled, (state, action) => {
@@ -74,8 +74,5 @@ export const userOrderSlice = createSlice({
 
 export const { clearOrder } = userOrderSlice.actions;
 export const userOrderReducer = userOrderSlice.reducer;
-export const {
-  orderSelector,
-  ordersSelector,
-  orderRequest
-} = userOrderSlice.selectors;
+export const { orderSelector, ordersSelector, orderRequest } =
+  userOrderSlice.selectors;

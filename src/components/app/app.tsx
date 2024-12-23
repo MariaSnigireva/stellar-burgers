@@ -18,8 +18,8 @@ import { useDispatch } from '../../services/store';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { useEffect } from 'react';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
-
 import { getUser } from '../../services/slices/authSlice';
+
 const App = () => {
   const location = useLocation();
   const backgroundLocation = location.state?.background;
@@ -29,7 +29,7 @@ const App = () => {
   useEffect(() => {
     dispatch(getIngredients());
     dispatch(getUser());
-  }, [dispatch]);//можно ли оставить пустой [] ...
+  }, [dispatch]);
 
   const onClose = () => {
     navigate(-1); // Возвращаемся на предыдущую страницу

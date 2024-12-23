@@ -77,5 +77,4 @@ export const {
   moveDown,
   clearBurgerConstructor
 } = constructorSlice.actions;
-export const { burger, bun, otherIngredients } =
-  constructorSlice.selectors;
+export const { burger, bun, otherIngredients } = constructorSlice.selectors;

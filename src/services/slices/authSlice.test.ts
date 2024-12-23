@@ -1,154 +1,223 @@
-import { userReducer,fetchUser, initialState, loginUser, registerUser, getUser, updateUser, logoutUser } from './authSlice';
+import {
+  userReducer,
+  fetchUser,
+  initialState,
+  loginUser,
+  registerUser,
+  getUser,
+  logoutUser,
+} from './authSlice';
 import * as api from '@api';
-import { TUser, TOrder } from '@utils-types';
-
+import { TUser } from '@utils-types';
 
 // Моковые данные для тестов
 const mockUser: TUser = {
-  email: "Masch.dark@yandex.ru",
-  name: "Mary"
+  email: 'Masch.dark@yandex.ru',
+  name: 'Mary',
 };
 
+jest.mock('@api', () => ({
+  loginUserApi: jest.fn(),
+  registerUserApi: jest.fn(),
+  getUserApi: jest.fn(),
+  logoutApi: jest.fn(),
+}));
 
-const mockResponse = {
-  success: true,
-  user: { name: 'Mary', email: 'Masch.dark@yandex.ru' },
-  accessToken: 'token',
-  refreshToken: 'refreshToken'
+type TRegisterData = {
+  email: string;
+  password: string;
+  name: string;
+};
+
+type TLoginData = {
+  email: string;
+  password: string;
 };
 
 describe('tests for userSlice', () => {
-  it('handle registerUser.pending', () => {
-    const nextState = userReducer(
-      initialState,
-      registerUser.pending('', { email: '', password: '', name: '' })
-    );
-    expect(nextState.isLoading).toBe(true);
-    expect(nextState.error).toBe('');
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('handle registerUser.fulfilled', () => {
-    const nextState = userReducer(
+  it('should handle registerUser.pending', () => {
+    const registerData: TRegisterData = {
+      email: 'test@example.com',
+      password: 'password123',
+      name: 'Test User',
+    };
+
+    const nextState = userReducer(initialState, registerUser.pending('', registerData));
+    expect(nextState.isLoading).toBe(true);
+    expect(nextState.error).toBe(null); // Ожидаем null
+  });
+
+  it('should handle registerUser.fulfilled', async () => {
+    (api.registerUserApi as jest.Mock).mockResolvedValueOnce({
+      accessToken: 'token',
+      refreshToken: 'refreshToken',
+      user: mockUser,
+    });
+
+    const registerData: TRegisterData = {
+      email: 'test@example.com',
+      password: 'password123',
+      name: 'Test User',
+    };
+
+    const nextState = await userReducer(
       initialState,
-      registerUser.fulfilled(mockUser, '', {
-        email: '',
-        password: '',
-        name: ''
-      })
+      await registerUser.fulfilled(mockUser, '', registerData)
     );
+
     expect(nextState.isLoading).toBe(false);
     expect(nextState.user).toEqual(mockUser);
-  });
-
-  it('handle registerUser.rejected', () => {
-    const mockError = { message: 'Registration failed' };
-    const nextState = userReducer(
-      initialState,
-      registerUser.rejected(mockError as any, '', {
-        email: '',
-        password: '',
-        name: ''
-      })
-    );
-    expect(nextState.isLoading).toBe(false);
-    expect(nextState.error).toBe(mockError.message);
-  });
-
-  it('handle loginUser.pending', () => {
-    const nextState = userReducer(
-      initialState,
-      loginUser.pending('', { email: '', password: '' })
-    );
-    expect(nextState.isLoading).toBe(true);
-    expect(nextState.error).toBe('');
-  });
-
-  it('handle loginUser.fulfilled', () => {
-    const nextState = userReducer(
-      initialState,
-      loginUser.fulfilled(mockResponse.user, '', {
-        email: '',
-        password: ''
-      })
-    );
-    expect(nextState.isLoading).toBe(false);
-    expect(nextState.user).toEqual(mockResponse.user); // Здесь используем только user
+    expect(nextState.isAuthenticated).toBe(true);
     expect(nextState.isAuthChecked).toBe(true);
   });
 
-  it('handle loginUser.rejected', () => {
-    const mockError = { message: 'Login failed' };
-    const nextState = userReducer(
+  it('should handle registerUser.rejected', async () => {
+    const errorMessage = 'Registration failed';
+    (api.registerUserApi as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+
+    const registerData: TRegisterData = {
+      email: 'test@example.com',
+      password: 'password123',
+      name: 'Test User',
+    };
+
+    const nextState = await userReducer(
       initialState,
-      loginUser.rejected(mockError as any, '', { email: '', password: '' })
+      await registerUser.rejected(new Error(errorMessage), '', registerData)
     );
+
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.error).toBe(mockError.message);
+    expect(nextState.error).toBe(errorMessage);
   });
 
-  it('handle fetchUser.pending', () => {
-    const nextState = userReducer(initialState, fetchUser.pending(''));
+  it('should handle loginUser.pending', () => {
+    const loginData: TLoginData = {
+      email: 'test@example.com',
+      password: 'password123',
+    };
+
+    const nextState = userReducer(initialState, loginUser.pending('', loginData));
     expect(nextState.isLoading).toBe(true);
-    expect(nextState.error).toBe('');
+    expect(nextState.error).toBe(null); // Ожидаем null
   });
 
-  it('handle fetchUser.fulfilled', () => {
-    const mockUser = { name: 'Test User', email: 'test@example.com' };
-    const nextState = userReducer(initialState, fetchUser.fulfilled(mockUser, ''));
+  it('should handle loginUser.fulfilled', async () => {
+    (api.loginUserApi as jest.Mock).mockResolvedValueOnce({
+      accessToken: 'token',
+      refreshToken: 'refreshToken',
+      user: mockUser,
+    });
+
+    const loginData: TLoginData = {
+      email: mockUser.email,
+      password: 'password123',
+    };
+
+    const nextState = await userReducer(
+      initialState,
+      await loginUser.fulfilled(mockUser, '', loginData)
+    );
+
     expect(nextState.isLoading).toBe(false);
     expect(nextState.user).toEqual(mockUser);
+    expect(nextState.isAuthenticated).toBe(true);
+    expect(nextState.isAuthChecked).toBe(true);
   });
 
-  it('handle fetchUser.rejected', () => {
-    const mockError = { message: 'Fetch user failed' };
-    const nextState = userReducer(
+  it('should handle loginUser.rejected', async () => {
+    const errorMessage = 'Login failed';
+    (api.loginUserApi as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+
+    const loginData: TLoginData = {
+      email: 'test@example.com',
+      password: 'password123',
+    };
+
+    const nextState = await userReducer(
       initialState,
-      fetchUser.rejected(mockError as any, '')
+      await loginUser.rejected(new Error(errorMessage), '', loginData)
     );
+
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.error).toBe(mockError.message);
+    expect(nextState.error).toBe(errorMessage);
+  });
+
+  it('should handle fetchUser.pending', () => {
+    const nextState = userReducer(initialState, fetchUser.pending(''));
+    expect(nextState.isLoading).toBe(true);
+    expect(nextState.error).toBe(null); // Ожидаем null
+  });
+
+  it('should handle fetchUser.fulfilled', async () => {
+    (api.getUserApi as jest.Mock).mockResolvedValueOnce({ user: mockUser });
+
+    const nextState = await userReducer(
+      initialState,
+      await fetchUser.fulfilled(mockUser, '')
+    );
+
+    expect(nextState.isLoading).toBe(false);
+    expect(nextState.user).toEqual(mockUser);
+    expect(nextState.isAuthenticated).toBe(true);
+    expect(nextState.isAuthChecked).toBe(true);
+  });
+
+  it('should handle fetchUser.rejected', async () => {
+    const errorMessage = 'Fetch user failed';
+    (api.getUserApi as jest.Mock).mockRejectedValueOnce(new Error(errorMessage));
+
+    const nextState = await userReducer(
+      initialState,
+      await fetchUser.rejected(new Error(errorMessage), '')
+    );
+
+    expect(nextState.isLoading).toBe(false);
+    expect(nextState.error).toBe(errorMessage);
   });
 
   it('should handle logoutUser.pending', () => {
-    const nextState = userReducer(
-      initialState,
-      logoutUser.pending('logoutRequestId')
-    );
+    const nextState = userReducer(initialState, logoutUser.pending('', undefined));
     expect(nextState.isLoading).toBe(true);
-    expect(nextState.error).toBe('');
+    expect(nextState.error).toBe(null); // Ожидаем null
   });
 
-  it('should handle logoutUser.fulfilled', () => {
+  it('should handle logoutUser.fulfilled', async () => {
     const modifiedState = {
       ...initialState,
       isLoading: true,
-      user: { name: 'Test User', email: 'test@example.com' },
-      error: 'Some error'
+      user: mockUser,
+      error: 'Some error',
     };
 
     const nextState = userReducer(
       modifiedState,
-      logoutUser.fulfilled(undefined, 'requestId', undefined, {
-        requestId: 'someRequestId'
-      })
+      await logoutUser.fulfilled(undefined, '')
     );
+
     expect(nextState.isLoading).toBe(false);
     expect(nextState.user).toBeNull();
+    expect(nextState.isAuthenticated).toBe(false);
+    expect(nextState.isAuthChecked).toBe(true);
   });
 
-  it('should handle logoutUser.rejected', () => {
+  it('should handle logoutUser.rejected', async () => {
+    const errorMessage = 'Logout failed';
     const action = {
       type: logoutUser.rejected.type,
-      error: { message: 'Logout failed' }
+      error: { message: errorMessage },
     };
 
     const modifiedState = {
       ...initialState,
-      isLoading: true
+      isLoading: true,
     };
 
     const nextState = userReducer(modifiedState, action);
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.error).toBe('Logout failed');
+    expect(nextState.error).toBe(errorMessage);
   });
 });
