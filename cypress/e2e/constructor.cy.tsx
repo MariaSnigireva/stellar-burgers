@@ -78,10 +78,12 @@ describe('Burger Constructor Integration Tests', () => {
     // Оформляем заказ
     cy.get(orderButtonSelector).click(); // Клик на кнопку "Оформить заказ"
 
+    cy.intercept('POST', '/api/orders').as('createOrder');
+
     // Ждем, пока создастся заказ
     cy.wait('@createOrder')
-     .its('response.body')
-     .then((response) => {
+      .its('response.body')
+      .then((response) => {
         expect(response.success).to.be.true;
         expect(response.order.number).to.equal(11111);
       });
@@ -107,15 +109,15 @@ describe('Burger Constructor Integration Tests', () => {
     cy.intercept('POST', '/api/orders').as('createOrder');
 
     // Оформляем заказ
-    cy.get(orderButtonSelector).click().then(() => {
-      // Ждем, пока создастся заказ
-      cy.wait('@createOrder')
-      .its('request.body')
-      .then((requestBody) => {
-          // Проверяем данные в теле запроса
-          expect(requestBody.ingredients).to.deep.equal([bunId, meatId]);
-        });
-    });
+    cy.get(orderButtonSelector).click(); // Клик на кнопку "Оформить заказ"
+
+    // Ждем, пока создастся заказ
+    cy.wait('@createOrder')
+     .its('request.body')
+     .then((requestBody) => {
+        // Проверяем данные в теле запроса
+        expect(requestBody.ingredients).to.deep.equal([bunId, meatId]);
+      });
 
     // Проверяем, что модальное окно открыто и номер заказа верный
     cy.get('.modal').should('exist');

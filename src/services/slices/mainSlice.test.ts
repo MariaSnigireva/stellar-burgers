@@ -64,7 +64,7 @@ describe('userOrderSlice', () => {
   it('should update the state when sendUserOrder is rejected', () => {
     const action = {
       type: 'order/sendUserOrder/rejected',
-      error: { message: 'Ошибка' } 
+      error: { message: 'Ошибка' }
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
@@ -98,7 +98,7 @@ describe('userOrderSlice', () => {
   it('should update the state when getUserOrders is rejected', () => {
     const action = {
       type: 'order/getUserOrders/rejected',
-      error: { message: 'Ошибка' } 
+      error: { message: 'Ошибка' }
     };
     store.dispatch(action);
     const state = store.getState().userOrder;
