@@ -16,20 +16,19 @@ describe('Burger Constructor Integration Tests', () => {
     }).as('getIngredients');
     // Перехват запроса на создание заказа
     cy.intercept('POST', 'api/orders', {
-      statusCode: 200,
-      body: {
-        success: true,
-        name: 'Флюоресцентный люминесцентный бургер',
-        order: {
-          _id: '6691143b119d45001b4f84fa',
-          number: 11111
-        }
-      }
+      fixture: 'order.json'
     }).as('createOrder');
 
     cy.intercept('GET', `api/auth/user`, {
       fixture: 'user.json'
     });
+    window.localStorage.setItem(
+      'refreshToken',
+      JSON.stringify('test-refreshToken')
+    );
+    
+    cy.setCookie('accessToken', 'test-accessToken');
+    cy.viewport(1300, 800);
 
     // Посещение страницы конструктора бургера
     cy.visit(testUrl);
