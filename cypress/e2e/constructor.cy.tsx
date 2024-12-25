@@ -26,12 +26,29 @@ describe('Burger Constructor Integration Tests', () => {
       'refreshToken',
       JSON.stringify('test-refreshToken')
     );
-    
+
     cy.setCookie('accessToken', 'test-accessToken');
     cy.viewport(1300, 800);
 
     // Посещение страницы конструктора бургера
     cy.visit(testUrl);
+  });
+
+  afterEach(function () {
+    cy.clearLocalStorage();
+    cy.clearCookies();
+  });
+
+  it('preloader', () => {
+    cy.visit(testUrl);
+    cy.wait('@getIngredients');
+    cy.get('main').should('contain', 'Соберите бургер');
+    cy.get('h1').should('contain', 'Соберите бургер');
+  });
+
+  it('error add', () => {
+    cy.visit(testUrl);
+    cy.wait('@getIngredients');
   });
 
   it('should add ingredients to the burger constructor', () => {
