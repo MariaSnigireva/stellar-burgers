@@ -1,4 +1,4 @@
-import { FC, memo, useEffect } from 'react';
+import React, { FC, memo, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import { TModalProps } from './type';

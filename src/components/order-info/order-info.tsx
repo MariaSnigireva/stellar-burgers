@@ -1,21 +1,29 @@
-import { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useDispatch, useSelector } from '../../services/store';
+import { getIngredientsSelector } from '../../services/slices/ingredientsSlice';
+import { getOrder, getOrdersUser } from '../../services/slices/ordersSlice';
+import { useParams } from 'react-router-dom';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const dispatch = useDispatch();
+  const { number } = useParams<{ number: string }>();
 
-  const ingredients: TIngredient[] = [];
+  // Получаем все заказы из стора
+  const orders = useSelector(getOrdersUser);
+
+  // Находим нужный заказ по номеру
+  const orderData = orders.find((item) => item.number === Number(number));
+
+  useEffect(() => {
+    if (number) {
+      dispatch(getOrder(Number(number))); // Вызываем метод для получения заказа, если он еще не загружен
+    }
+  }, [number, dispatch]);
+
+  const ingredients: TIngredient[] = useSelector(getIngredientsSelector);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -29,18 +37,17 @@ export const OrderInfo: FC = () => {
 
     const ingredientsInfo = orderData.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
-        if (!acc[item]) {
-          const ingredient = ingredients.find((ing) => ing._id === item);
-          if (ingredient) {
+        const ingredient = ingredients.find((ing) => ing._id === item);
+        if (ingredient) {
+          if (!acc[item]) {
             acc[item] = {
               ...ingredient,
               count: 1
             };
+          } else {
+            acc[item].count++;
           }
-        } else {
-          acc[item].count++;
         }
-
         return acc;
       },
       {}
