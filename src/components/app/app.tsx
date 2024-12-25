@@ -18,7 +18,7 @@ import React from 'react';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { useEffect } from 'react';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
-import { getUser } from '../../services/slices/authSlice';
+import { getUser, checkUserStatus } from '../../services/slices/authSlice';
 
 const App = () => {
   const location = useLocation();
@@ -28,7 +28,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(getUser());
+    dispatch(getUser())
+      .unwrap()
+      .catch(() => {})
+      .finally(() => dispatch(checkUserStatus()));
   }, [dispatch]);
 
   const onClose = () => {

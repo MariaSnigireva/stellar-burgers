@@ -9,7 +9,7 @@ import {
 } from './authSlice';
 import * as api from '@api';
 import { TUser } from '@utils-types';
-
+import React from 'react';
 // Моковые данные для тестов
 const mockUser: TUser = {
   email: 'Masch.dark@yandex.ru',
@@ -58,7 +58,7 @@ describe('tests for userSlice', () => {
     (api.registerUserApi as jest.Mock).mockResolvedValueOnce({
       accessToken: 'token',
       refreshToken: 'refreshToken',
-      user: mockUser
+      data: mockUser
     });
 
     const registerData: TRegisterData = {
@@ -73,9 +73,9 @@ describe('tests for userSlice', () => {
     );
 
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.user).toEqual(mockUser);
+    expect(nextState.data).toEqual(mockUser);
     expect(nextState.isAuthenticated).toBe(true);
-    expect(nextState.isAuthChecked).toBe(true);
+    expect(nextState.isAuthChecked).toBe(false);
   });
 
   it('should handle registerUser.rejected', async () => {
@@ -117,7 +117,7 @@ describe('tests for userSlice', () => {
     (api.loginUserApi as jest.Mock).mockResolvedValueOnce({
       accessToken: 'token',
       refreshToken: 'refreshToken',
-      user: mockUser
+      data: mockUser
     });
 
     const loginData: TLoginData = {
@@ -131,9 +131,9 @@ describe('tests for userSlice', () => {
     );
 
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.user).toEqual(mockUser);
+    expect(nextState.data).toEqual(mockUser);
     expect(nextState.isAuthenticated).toBe(true);
-    expect(nextState.isAuthChecked).toBe(true);
+    expect(nextState.isAuthChecked).toBe(false);
   });
 
   it('should handle loginUser.rejected', async () => {
@@ -163,7 +163,7 @@ describe('tests for userSlice', () => {
   });
 
   it('should handle fetchUser.fulfilled', async () => {
-    (api.getUserApi as jest.Mock).mockResolvedValueOnce({ user: mockUser });
+    (api.getUserApi as jest.Mock).mockResolvedValueOnce({ data: mockUser });
 
     const nextState = await userReducer(
       initialState,
@@ -171,9 +171,9 @@ describe('tests for userSlice', () => {
     );
 
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.user).toEqual(mockUser);
+    expect(nextState.data).toEqual(mockUser);
     expect(nextState.isAuthenticated).toBe(true);
-    expect(nextState.isAuthChecked).toBe(true);
+    expect(nextState.isAuthChecked).toBe(false);
   });
 
   it('should handle fetchUser.rejected', async () => {
@@ -204,7 +204,7 @@ describe('tests for userSlice', () => {
     const modifiedState = {
       ...initialState,
       isLoading: true,
-      user: mockUser,
+      data: mockUser,
       error: 'Some error'
     };
 
@@ -214,9 +214,9 @@ describe('tests for userSlice', () => {
     );
 
     expect(nextState.isLoading).toBe(false);
-    expect(nextState.user).toBeNull();
+    expect(nextState.data).toBeNull();
     expect(nextState.isAuthenticated).toBe(false);
-    expect(nextState.isAuthChecked).toBe(true);
+    expect(nextState.isAuthChecked).toBe(false);
   });
 
   it('should handle logoutUser.rejected', async () => {

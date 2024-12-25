@@ -6,6 +6,7 @@ import {
   nanoid
 } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
+import React from 'react';
 
 type TConstructorState = {
   bun: TConstructorIngredient | null;

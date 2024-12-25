@@ -34,7 +34,8 @@ export const BurgerConstructor: FC = () => {
     if (isAuthenticated) {
       const orderData = [
         constructorItems.bun?._id,
-        ...constructorItems.ingredients.map((ingredient) => ingredient._id)
+        ...constructorItems.ingredients.map((ingredient) => ingredient._id),
+        constructorItems.bun?._id
       ];
       dispatch(sendUserOrder(orderData));
     } else {

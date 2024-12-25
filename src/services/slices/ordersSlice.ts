@@ -1,3 +1,4 @@
+import React from 'react';
 import { getFeedsApi, getOrderByNumberApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder, RequestStatus } from '@utils-types';

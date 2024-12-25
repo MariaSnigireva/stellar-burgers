@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   getUserApi,
   loginUserApi,
@@ -19,7 +20,6 @@ type TUserState = {
   loginUserRequest: boolean;
   isLoading: boolean;
   error: string | null;
-  user: TUser | null;
 };
 
 export const loginUser = createAsyncThunk<TUser, TLoginData>(
@@ -67,8 +67,7 @@ export const initialState: TUserState = {
   loginUserError: null,
   loginUserRequest: false,
   isLoading: false,
-  error: null,
-  user: null
+  error: null
 };
 type TUserResponse = {
   user: TUser;
@@ -85,7 +84,11 @@ export const fetchUser = createAsyncThunk<TUser, void>(
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    checkUserStatus: (state) => {
+      state.isAuthChecked = true;
+    }
+  },
   selectors: {
     userSelector: (state) => state.data,
     authCheck: (state) => state.isAuthChecked,
@@ -102,10 +105,9 @@ export const userSlice = createSlice({
         state.error = action.error.message || 'Login failed';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.data = action.payload;
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
       })
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
@@ -116,10 +118,9 @@ export const userSlice = createSlice({
         state.error = action.error.message || 'Registration failed';
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.data = action.payload;
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
       })
       .addCase(getUser.pending, (state) => {
         state.isLoading = true;
@@ -130,10 +131,9 @@ export const userSlice = createSlice({
         state.error = action.error.message || 'Fetch user failed';
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.data = action.payload;
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
       })
       .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
@@ -144,20 +144,18 @@ export const userSlice = createSlice({
         state.error = action.error.message || 'Logout failed';
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        state.user = null;
+        state.data = null;
         state.isLoading = false;
         state.isAuthenticated = false;
-        state.isAuthChecked = true;
       })
       .addCase(fetchUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.data = action.payload;
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
       })
       .addCase(fetchUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -168,3 +166,4 @@ export const userSlice = createSlice({
 
 export const userReducer = userSlice.reducer;
 export const { userSelector, authCheck, authUserRight } = userSlice.selectors;
+export const { checkUserStatus } = userSlice.actions;
