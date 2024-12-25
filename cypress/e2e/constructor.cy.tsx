@@ -2,8 +2,6 @@ describe('Burger Constructor Integration Tests', () => {
   const testUrl = 'http://localhost:4002';
   const bunId = '643d69a5c3f7b9001cfa093d';
   const meatId = '643d69a5c3f7b9001cfa093e';
-  const apiUrl =
-    Cypress.env('BURGER_API_URL') || 'https://norma.nomoreparties.space/api';
 
   const ingredientSelector = (id) => `[data-testid="ingredient-${id}"]`;
   const orderButtonSelector = '[data-testid="order-button"]';
@@ -13,11 +11,11 @@ describe('Burger Constructor Integration Tests', () => {
 
   beforeEach(() => {
     // Перехват запроса на получение ингредиентов
-    cy.intercept('GET', `${apiUrl}/ingredients`, {
+    cy.intercept('GET', `api/ingredients`, {
       fixture: 'ingredients.json'
     }).as('getIngredients');
     // Перехват запроса на создание заказа
-    cy.intercept('POST', '/api/orders', {
+    cy.intercept('POST', 'api/orders', {
       statusCode: 200,
       body: {
         success: true,
@@ -29,7 +27,7 @@ describe('Burger Constructor Integration Tests', () => {
       }
     }).as('createOrder');
 
-    cy.intercept('GET', `${apiUrl}/auth/user`, {
+    cy.intercept('GET', `api/auth/user`, {
       fixture: 'user.json'
     });
 
@@ -61,7 +59,17 @@ describe('Burger Constructor Integration Tests', () => {
     cy.get(modalCloseButtonSelector).click(); // Клик на крестик
     cy.get(modalSelector).should('not.exist');
   });
-    
+
+  it('overlay', () => {
+    //открытие
+    cy.get(ingredientSelector(bunId)).click();
+    cy.get(modalSelector).should('be.visible');
+
+    // Закрытие по клику на оверлей
+    cy.get('[data-testid="modal-overlay"]').click('topRight', { force: true });
+    cy.get(modalSelector).should('not.exist');
+  });
+
   it('should create an order and verify the order modal', () => {
     // Добавляем ингредиенты
     cy.get(ingredientSelector(bunId)).contains('Добавить').click(); // Добавляем булку
@@ -88,11 +96,7 @@ describe('Burger Constructor Integration Tests', () => {
     cy.get(modalCloseButtonSelector).click(); // Клик на крестик
     cy.get(modalSelector).should('not.exist');
 
-    cy.get(burgerConstructorSelector)
-    .contains(bunId)
-    .should('not.exist');
-    cy.get(burgerConstructorSelector)
-    .contains(meatId)
-    .should('not.exist');
+    cy.get(burgerConstructorSelector).contains(bunId).should('not.exist');
+    cy.get(burgerConstructorSelector).contains(meatId).should('not.exist');
   });
 });
